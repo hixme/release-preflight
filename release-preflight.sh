@@ -61,7 +61,16 @@ if [ "${#SORTED_CONVENTIONAL[@]}" -ne 0 ]; then
   done
 fi
 
-echo "==================== OTHER ======================"
-echo "${SORTED_OTHER[*]}"
+# Display if other commits that are not associated with JIRA issues
+if [ "${#SORTED_OTHER[@]}" -ne 0 ]; then
+  echo "==================== OTHER ======================"
+  echo "${SORTED_OTHER[*]}"
+fi
+
+
+# Display message if no changes are found
+if [ "${#SORTED_CONVENTIONAL[@]}" -eq 0 ] && [ "${#SORTED_OTHER[@]}" -eq 0 ]; then
+  echo "No changes found."
+fi
 
 cleanUp
