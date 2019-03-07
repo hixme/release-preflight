@@ -47,18 +47,30 @@ done < $TMP_FILE
 SORTED_CONVENTIONAL=($(sort -u <<<"${CONVENTIONAL[*]}"))
 SORTED_OTHER=($(sort -u <<<"${OTHER[*]}"))
 
-echo "==================== TICKETS ===================="
-for i in "${SORTED_CONVENTIONAL[@]}"
-do
-  ISSUE_TITLE=$(downloadIssue $i)
-  if [[ -n $ISSUE_TITLE ]]; then
-    echo "$i: $ISSUE_TITLE"
-  else
-    echo $i
-  fi
-done
+# Display if JIRA issues if commits are found with issue IDs
+if [ "${#SORTED_CONVENTIONAL[@]}" -ne 0 ]; then
+  echo "==================== TICKETS ===================="
+  for i in "${SORTED_CONVENTIONAL[@]}"
+  do
+    ISSUE_TITLE=$(downloadIssue $i)
+    if [[ -n $ISSUE_TITLE ]]; then
+      echo "$i: $ISSUE_TITLE"
+    else
+      echo $i
+    fi
+  done
+fi
 
-echo "==================== OTHER ======================"
-echo "${SORTED_OTHER[*]}"
+# Display if other commits that are not associated with JIRA issues
+if [ "${#SORTED_OTHER[@]}" -ne 0 ]; then
+  echo "==================== OTHER ======================"
+  echo "${SORTED_OTHER[*]}"
+fi
+
+
+# Display message if no changes are found
+if [ "${#SORTED_CONVENTIONAL[@]}" -eq 0 ] && [ "${#SORTED_OTHER[@]}" -eq 0 ]; then
+  echo "No changes found."
+fi
 
 cleanUp
