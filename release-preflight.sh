@@ -3,6 +3,12 @@ TMP_FILE=/tmp/release-$(date +"%T").log
 
 git log origin/master..origin/develop --oneline --no-merges --no-decorate > $TMP_FILE
 
+if [[ -z $JIRA_DOMAIN ]]; then
+  echo -n "JIRA domain: "
+  read JIRA_DOMAIN
+  printf "\n"
+fi
+
 if [[ -z "$JIRA_USERNAME" ]] || [[ -z "$JIRA_PASSWORD" ]]; then
   echo "Enter JIRA credentials"
   echo -n "Username: "
