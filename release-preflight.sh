@@ -1,3 +1,4 @@
+# !/bin/sh
 IFS=$'\n'
 TMP_FILE=/tmp/release-$(date +"%T").log
 
