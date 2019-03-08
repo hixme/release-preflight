@@ -1,14 +1,20 @@
 # release-preflight
 
-Script to generate a release ticket summary 
+Script to generate a JIRA ticket release summary based on a specific commit message template. 
+
+```bash
+# The commit messages must include:
+#   - Ticket type (fix, feat/feature, imp/improvement, hotfix)
+#   - JIRA issue key
+
+fix/ABC-1234: Fix something
+```
+
+The script displays tickets which are in the `develop` branch, but not the `master` branch.
 
 ## Usage
 
-```bash
-JIRA_DOMAIN=<mydomain> release-preflight.sh
-```
-
-The script relies a domain environment variable to be passed. For information on how to determine what that is, see [here](https://developer.atlassian.com/cloud/jira/platform/rest/v3).
+The script relies a domain to be provided. For information on how to determine what that is, see [here](https://developer.atlassian.com/cloud/jira/platform/rest/v3).
 
 You will be prompted for your JIRA username and password. Optionally, you may provide those as environment variables as well:
 
