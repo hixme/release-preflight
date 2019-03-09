@@ -2,14 +2,20 @@
 IFS=$'\n'
 TMP_FILE=/tmp/release-$(date +"%T").log
 
+# Update local origin
+git fetch -q
+
+# Write comparison of master and develop to temp file
 git log origin/master..origin/develop --oneline --no-merges --no-decorate > $TMP_FILE
 
+# Read in domain name if it's not provided in env
 if [[ -z $JIRA_DOMAIN ]]; then
   echo -n "JIRA domain: "
   read JIRA_DOMAIN
   printf "\n"
 fi
 
+# Read in name and password if they're not provided in env
 if [[ -z "$JIRA_USERNAME" ]] || [[ -z "$JIRA_PASSWORD" ]]; then
   echo "Enter JIRA credentials"
   echo -n "Username: "
@@ -51,7 +57,10 @@ while read -r commit ; do
   fi
 done < $TMP_FILE
 
+# Remove duplicates and put commits that follow the convention in an array
 SORTED_CONVENTIONAL=($(sort -u <<<"${CONVENTIONAL[*]}"))
+
+# Remove duplicates and put everything else in an array
 SORTED_OTHER=($(sort -u <<<"${OTHER[*]}"))
 
 # Display if JIRA issues if commits are found with issue IDs
