@@ -3,6 +3,7 @@ IFS=$'\n'
 TMP_FILE=/tmp/release-$(date +"%T").log
 
 # Update local origin
+echo "Fetching latest from origin..."
 git fetch -q
 
 # Write comparison of master and develop to temp file
