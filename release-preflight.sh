@@ -50,11 +50,11 @@ while read -r commit ; do
   if echo $commit | grep -q "release/*"; then
     continue
   elif echo $commit | grep -qE "^[^:]*$"; then 
-    OTHER=("${OTHER[@]}" "$(echo $commit | cut -c 10-)")
+    OTHER=("${OTHER[@]}" "$(echo $commit | cut -d " " -f 2 )")
   elif echo $commit | grep -qE "[A-Za-z]{3,11}\/[A-Za-z]{2,4}-[0-9]{1,5}"; then
-    CONVENTIONAL=("${CONVENTIONAL[@]}" "$(echo $commit | cut -c 10- | cut -d ':' -f 1)")
+    CONVENTIONAL=("${CONVENTIONAL[@]}" "$(echo $commit | cut -d " " -f 2 | cut -d ':' -f 1)")
   else
-    OTHER=("${OTHER[@]}" "$(echo $commit | cut -c 10- | cut -d ':' -f 1)")
+    OTHER=("${OTHER[@]}" "$(echo $commit | cut -d " " -f 2 | cut -d ':' -f 1)")
   fi
 done < $TMP_FILE
 
