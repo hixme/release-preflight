@@ -6,8 +6,16 @@ TMP_FILE=/tmp/release-$(date +"%T").log
 echo "Fetching latest from origin..."
 git fetch -q
 
+if [[ -z "$TARGET_BRANCH" ]]; then
+  TARGET_BRANCH="master"
+fi
+
+if [[ -z "$SOURCE_BRANCH" ]]; then
+  SOURCE_BRANCH="develop"
+fi
+
 # Write comparison of master and develop to temp file
-git log origin/master..origin/develop --oneline --no-merges --no-decorate > $TMP_FILE
+git log origin/"$TARGET_BRANCH"..origin/"$SOURCE_BRANCH" --oneline --no-merges --no-decorate > $TMP_FILE
 
 # Read in domain name if it's not provided in env
 if [[ -z $JIRA_DOMAIN ]]; then
