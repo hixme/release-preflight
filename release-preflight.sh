@@ -62,7 +62,7 @@ while read -r commit ; do
   elif echo $commit | grep -qE "[A-Za-z]{3,11}\/[A-Za-z]{2,4}-[0-9]{1,5}"; then
     CONVENTIONAL=("${CONVENTIONAL[@]}" "$(echo $commit | cut -d ':' -f 1)")
   else
-    OTHER=("${OTHER[@]}" "$(echo $commit | cut -d ':' -f 2 | tail -c 1)")
+    OTHER=("${OTHER[@]}" "$(echo $commit | cut -d ':' -f 1)")
   fi
 done < $TMP_FILE
 
