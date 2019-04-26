@@ -25,7 +25,7 @@ if [[ -z $JIRA_DOMAIN ]]; then
 fi
 
 # Read in name and password if they're not provided in env
-if [[ -z "$JIRA_USERNAME" ]] || [[ -z "$JIRA_PASSWORD" ]]; then
+if ([[ -z "$JIRA_USERNAME" ]] || [[ -z "$JIRA_PASSWORD" ]]) && [[ -z $JIRA_AUTH ]]; then
   echo "Enter JIRA credentials"
   echo -n "Username: "
   read JIRA_USERNAME
@@ -39,12 +39,20 @@ downloadIssue() {
   BRANCH_NAME=$1
   ISSUE_KEY=$(echo $BRANCH_NAME | cut -d '/' -f 2)
 
-  # Issue call requires auth token to be passed as environment variable on JIRA_AUTH
-  curl -s --request GET \
-    -u "$JIRA_USERNAME:$JIRA_PASSWORD" \
-    --url "https://$JIRA_DOMAIN.atlassian.net/rest/api/3/issue/$ISSUE_KEY?fields=summary" \
-    --header "Accept: application/json" | \
-   perl -nle'print $& while m{"'"summary"'"\s*:\s*"\K([^"]*)}g'
+  # Issue call requires auth token or username and password to be passed as environment variables
+  if [[ -n $JIRA_AUTH ]]; then
+    curl -s --request GET \
+      --url "https://$JIRA_DOMAIN.atlassian.net/rest/api/3/issue/$ISSUE_KEY?fields=summary" \
+      --header "Authorization: Basic $JIRA_AUTH" \
+      --header "Accept: application/json" | \
+     perl -nle'print $& while m{"'"summary"'"\s*:\s*"\K([^"]*)}g'
+  else
+    curl -s --request GET \
+      -u "$JIRA_USERNAME:$JIRA_PASSWORD" \
+      --url "https://$JIRA_DOMAIN.atlassian.net/rest/api/3/issue/$ISSUE_KEY?fields=summary" \
+      --header "Accept: application/json" | \
+     perl -nle'print $& while m{"'"summary"'"\s*:\s*"\K([^"]*)}g'
+  fi
 }
 
 cleanUp() {
